@@ -92,7 +92,7 @@ Ford-Fulkerson 알고리즘은 **더 이상 증강경로가 존재하지 않을 
 
 따라서 **b → a로 간선이 실제로 존재하지는 않지만 1만큼의 유량을 보낼 수 있다.**
 
-이와 같은 속성을 이용하여 최대 유량을 못구하는 경우를 배제하는 방법을 `**유량 상쇄**`라고 한다. 자세히 살펴보기 위해 아래와 같은 그림이 있다고 한다.
+이와 같은 속성을 이용하여 최대 유량을 못구하는 경우를 배제하는 방법을 `유량 상쇄`라고 한다. 자세히 살펴보기 위해 아래와 같은 그림이 있다고 한다.
 
 ![https://user-images.githubusercontent.com/63987872/165857936-461e9a4f-af94-45ae-b572-fc0ae86dcf1c.jpg](https://user-images.githubusercontent.com/63987872/165857936-461e9a4f-af94-45ae-b572-fc0ae86dcf1c.jpg)
 
@@ -110,61 +110,7 @@ Ford-Fulkerson 알고리즘은 **더 이상 증강경로가 존재하지 않을 
 
 ### 코드
 
-```python
-from sys import maxsize
-
-INF = maxsize
-
-def dfs(now, res):
-  if now == n:
-    return res
-
-  for next in range(2, n + 1):
-    if network[now][next] and notvisited[next]:
-      visited[next] = True
-
-      w = dfs(next, min(res, network[now][next]))
-
-      if w > 0:
-        network[now][next] -= w
-
-        network[next][now] += w
-
-        return w
-
-  return 0
-
-n, m = map(int, input().split())
-
-network = [[0 for _ in range(n + 1)] for _ in range(n + 1)]
-
-for _ in range(m):
-  u, v, capacity = map(int, input().split())
-
-  network[u][v] += capacity
-
-total_flow = 0
-
-flow = 1
-
-idx = 0
-
-print("🔥🔥실행결과🔥🔥")
-
-while flow:
-  visited = [False for _ in range(n + 1)]
-
-  flow = dfs(1, INF)
-
-  total_flow += flow
-
-  if flow != 0:
-    idx += 1
-
-    print(str(idx) + "번째 경로일 때:" + str(flow))
-
-print("네트워크의 최대 유량: " + str(total_flow))
-```
+[소스코드](Ford-Fulkerson.py)
 
 ### 수행 결과
 
@@ -202,8 +148,8 @@ Ford-Fulkerson 알고리즘은 DFS를 사용하여 증강경로를 찾는다. �
 
 즉, DFS를 이용하여 경로를 찾을 때마다 유량을 1만큼만 보낼 수 있게 되어 총 경로 2개만 찾으면 해결할 수 있는 문제를 최대 유량의 수(위 그림에서는 2000번)만큼 경로를 찾고 알고리즘을 종료하게 된다.
 
-따라서 **DFS의 시간복잡도는 매 반복 당 O(|V| + |E|)이고 그래프에서의 최대 유량이 total_flow라고 하면 Ford-Fulkerson 알고리즘의 시간복잡도는 O((|V| + |E|) \* total_flow)가 된다.** **이때, 보통의 경우 간선의 개수가 정점의 개수보다 많기 때문에 O(|E|) \* total_flow)가 된다. total_flow가 크다면 엄청난 시간 비효율을 겪게 될 것이다.**
+따라서 **DFS의 시간복잡도는 매 반복 당 O(|V| + |E|)이고 그래프에서의 최대 유량이 total_flow라고 하면 `Ford-Fulkerson 알고리즘의 시간복잡도는 O((|V| + |E|) * total_flow)`가 된다.** **이때, 보통의 경우 간선의 개수가 정점의 개수보다 많기 때문에 `O(|E|) * total_flow)`가 된다. total_flow가 크다면 엄청난 시간 비효율을 겪게 될 것이다.**
 
-**이러한 문제점은 DFS가 아닌 BFS로 증강경로를 찾아내면 해결할 수 있습니다.** **증강경로를 찾기 위해 BFS를 사용하는 Ford-Fulkerson 알고리즘의 한 형태를 Edmonds-Karp 알고리즘**이라고 한다.
+**이러한 문제점은 DFS가 아닌 BFS로 증강경로를 찾아내면 해결할 수 있습니다.** **증강경로를 찾기 위해 `BFS를 사용하는 Ford-Fulkerson 알고리즘의 한 형태를 Edmonds-Karp 알고리즘`**이라고 한다.
 
-BFS를 사용하면 **시간복잡도는 O(|V| \* |E|^2)로 줄어들게 된다.**
+BFS를 사용하면 **`시간복잡도는 O(|V| * |E|^2)`로 줄어들게 된다.**
