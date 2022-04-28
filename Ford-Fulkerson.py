@@ -12,14 +12,15 @@ def dfs(now, res):
             visited[next] = True
             w = dfs(next, min(res, network[now][next]))
             if w > 0:
+                # 잔여 용량 갱신
                 network[now][next] -= w
                 network[next][now] += w
                 return w
     return 0
 
 
-n, m = map(int, input().split())
-network = [[0 for _ in range(n+1)] for _ in range(n + 1)]
+n, m = map(int, input().split())  # 정점의 개수, 간선의 개수
+network = [[0 for _ in range(n+1)] for _ in range(n + 1)]  # 그래프
 
 
 for _ in range(m):
